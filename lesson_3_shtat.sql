@@ -29,7 +29,8 @@ CREATE TABLE `shtat` (
   `otdel` int(11) DEFAULT NULL,
   `zp` int(11) DEFAULT NULL,
   `position` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `zp` (`zp`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,4 +101,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-02 17:55:55
+-- Dump completed on 2019-02-04 19:08:25
