@@ -16,29 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `depart`
+-- Table structure for table `dates`
 --
 
-DROP TABLE IF EXISTS `depart`;
+DROP TABLE IF EXISTS `dates`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `depart` (
+CREATE TABLE `dates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `count` int(11) DEFAULT '0',
-  `head_id` int(11) DEFAULT NULL,
+  `entrance` date DEFAULT NULL,
+  `layoff` date DEFAULT NULL,
+  `employee_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `depart`
+-- Dumping data for table `dates`
 --
 
-LOCK TABLES `depart` WRITE;
-/*!40000 ALTER TABLE `depart` DISABLE KEYS */;
-INSERT INTO `depart` VALUES (1,'IT отдел',0,NULL),(2,'Бухгалтерия',0,NULL),(3,'Контроль качества',0,NULL);
-/*!40000 ALTER TABLE `depart` ENABLE KEYS */;
+LOCK TABLES `dates` WRITE;
+/*!40000 ALTER TABLE `dates` DISABLE KEYS */;
+INSERT INTO `dates` VALUES (1,'2019-01-31',NULL,1),(2,'2019-01-31',NULL,2),(3,'2019-01-31',NULL,3),(4,'2019-01-31',NULL,4),(5,'2019-01-31',NULL,5),(17,'2019-01-31','2019-01-31',7),(18,'2019-01-31',NULL,8),(19,'2019-02-02','2019-02-02',9),(20,'2019-02-02',NULL,10);
+/*!40000 ALTER TABLE `dates` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
