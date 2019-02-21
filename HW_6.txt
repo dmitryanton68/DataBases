@@ -1,0 +1,209 @@
+
+Homework to 6 lesson:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+---------------- MASTER: ------------------------------------
+
+mysql> SHOW MASTER STATUS;
++------------+----------+--------------+------------------+-------------------+
+| File       | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++------------+----------+--------------+------------------+-------------------+
+| bin.000022 |      629 | lesson_3     |                  |                   |
++------------+----------+--------------+------------------+-------------------+
+1 row in set (0,00 sec)
+
+mysql> use lesson_3;
+Database changed
+mysql> select * from dates;
+Empty set (0,00 sec)
+
+mysql> insert into dates(entrance) values(curdate());
+Query OK, 1 row affected (0,09 sec)
+
+mysql> select * from dates;
++----+------------+--------+-------------+
+| id | entrance   | layoff | employee_id |
++----+------------+--------+-------------+
+|  1 | 2019-02-21 | NULL   |        NULL |
++----+------------+--------+-------------+
+1 row in set (0,00 sec)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+---------- SLAVE: ----------------------------------
+
+mysql> STOP SLAVE;
+Query OK, 0 rows affected (0,10 sec)
+
+mysql> RESET SLAVE;
+Query OK, 0 rows affected (0,02 sec)
+
+mysql> CHANGE MASTER TO MASTER_HOST='192.168.1.31', MASTER_USER='root', MASTER_P       ASSWORD='123123', MASTER_LOG_FILE='bin.000022', MASTER_LOG_POS=629;
+Query OK, 0 rows affected, 2 warnings (0,04 sec)
+
+mysql> START SLAVE;
+Query OK, 0 rows affected (0,05 sec)
+
+mysql> SHOW SLAVE STATUS \G
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: 192.168.1.31
+                  Master_User: root
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: bin.000022
+          Read_Master_Log_Pos: 629
+               Relay_Log_File: relay.000002
+                Relay_Log_Pos: 316
+        Relay_Master_Log_File: bin.000022
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB:
+          Replicate_Ignore_DB:
+           Replicate_Do_Table:
+       Replicate_Ignore_Table:
+      Replicate_Wild_Do_Table:
+  Replicate_Wild_Ignore_Table:
+                   Last_Errno: 0
+                   Last_Error:
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 629
+              Relay_Log_Space: 514
+              Until_Condition: None
+               Until_Log_File:
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: No
+           Master_SSL_CA_File:
+           Master_SSL_CA_Path:
+              Master_SSL_Cert:
+            Master_SSL_Cipher:
+               Master_SSL_Key:
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error:
+               Last_SQL_Errno: 0
+               Last_SQL_Error:
+  Replicate_Ignore_Server_Ids:
+             Master_Server_Id: 1
+                  Master_UUID: 3a90a3b6-f1ab-11e8-8365-080027ad0e39
+             Master_Info_File: mysql.slave_master_info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for more up       dates
+           Master_Retry_Count: 86400
+                  Master_Bind:
+      Last_IO_Error_Timestamp:
+     Last_SQL_Error_Timestamp:
+               Master_SSL_Crl:
+           Master_SSL_Crlpath:
+           Retrieved_Gtid_Set:
+            Executed_Gtid_Set:
+                Auto_Position: 0
+         Replicate_Rewrite_DB:
+                 Channel_Name:
+           Master_TLS_Version:
+       Master_public_key_path:
+        Get_master_public_key: 0
+1 row in set (0,00 sec)
+
+mysql> use lesson_3;
+Database changed
+mysql> select * from dates;
++----+------------+--------+-------------+
+| id | entrance   | layoff | employee_id |
++----+------------+--------+-------------+
+|  1 | 2019-02-21 | NULL   |        NULL |
++----+------------+--------+-------------+
+1 row in set (0,00 sec)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+---------------------------- MongoDB: ---------------------------------
+
+> use state
+switched to db state
+> db.state.insert({"state":"Russia"}, {"state":"Belorus"})
+WriteResult({ "nInserted" : 1 })
+> db.state.find()
+{ "_id" : ObjectId("5c6e916add7a2c0baf0f1897"), "state" : "Russia" }
+> db.state.update({"state":"Russia"},{$set: {"region":"Central", "city":"Moscow"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.state.find()
+{ "_id" : ObjectId("5c6e916add7a2c0baf0f1897"), "state" : "Russia", "city" : "Moscow", "region" : "Central" }
+> db.state.insert({"state":"Russia","region":"North-West", "city":"Saint-Petersburg"})
+WriteResult({ "nInserted" : 1 })
+> db.state.find()
+{ "_id" : ObjectId("5c6e916add7a2c0baf0f1897"), "state" : "Russia", "city" : "Moscow", "region" : "Central" }
+{ "_id" : ObjectId("5c6e93a7dd7a2c0baf0f1898"), "state" : "Russia", "region" : "North-West", "city" : "Saint-Petersburg" }
+> db.state.insert({"state":"Belorus","region":"Central", "city":"Minsk"})
+WriteResult({ "nInserted" : 1 })
+> db.state.insert({"state":"Belorus","region":"North-East", "city":"Vitebsk"})
+WriteResult({ "nInserted" : 1 })
+> db.state.find()
+{ "_id" : ObjectId("5c6e916add7a2c0baf0f1897"), "state" : "Russia", "city" : "Moscow", "region" : "Central" }
+{ "_id" : ObjectId("5c6e93a7dd7a2c0baf0f1898"), "state" : "Russia", "region" : "North-West", "city" : "Saint-Petersburg" }
+{ "_id" : ObjectId("5c6e93fddd7a2c0baf0f1899"), "state" : "Belorus", "region" : "Central", "city" : "Minsk" }
+{ "_id" : ObjectId("5c6e941bdd7a2c0baf0f189a"), "state" : "Belorus", "region" : "North-East", "city" : "Vitebsk" }
+> db.state.find({"state" : "Belorus"})
+{ "_id" : ObjectId("5c6e93fddd7a2c0baf0f1899"), "state" : "Belorus", "region" : "Central", "city" : "Minsk" }
+{ "_id" : ObjectId("5c6e941bdd7a2c0baf0f189a"), "state" : "Belorus", "region" : "North-East", "city" : "Vitebsk" }
+> db.state.find({"state" : "Belorus"}).pretty()
+{
+        "_id" : ObjectId("5c6e93fddd7a2c0baf0f1899"),
+        "state" : "Belorus",
+        "region" : "Central",
+        "city" : "Minsk"
+}
+{
+        "_id" : ObjectId("5c6e941bdd7a2c0baf0f189a"),
+        "state" : "Belorus",
+        "region" : "North-East",
+        "city" : "Vitebsk"
+}
+> db.state.find({"state" : {$regex:"^B"}}).pretty()
+{
+        "_id" : ObjectId("5c6e93fddd7a2c0baf0f1899"),
+        "state" : "Belorus",
+        "region" : "Central",
+        "city" : "Minsk"
+}
+{
+        "_id" : ObjectId("5c6e941bdd7a2c0baf0f189a"),
+        "state" : "Belorus",
+        "region" : "North-East",
+        "city" : "Vitebsk"
+}
+> db.state.find().pretty()
+{
+        "_id" : ObjectId("5c6e916add7a2c0baf0f1897"),
+        "state" : "Russia",
+        "city" : "Moscow",
+        "region" : "Central"
+}
+{
+        "_id" : ObjectId("5c6e93a7dd7a2c0baf0f1898"),
+        "state" : "Russia",
+        "region" : "North-West",
+        "city" : "Saint-Petersburg"
+}
+{
+        "_id" : ObjectId("5c6e93fddd7a2c0baf0f1899"),
+        "state" : "Belorus",
+        "region" : "Central",
+        "city" : "Minsk"
+}
+{
+        "_id" : ObjectId("5c6e941bdd7a2c0baf0f189a"),
+        "state" : "Belorus",
+        "region" : "North-East",
+        "city" : "Vitebsk"
+}
+>
+
+
+
+
+
+
