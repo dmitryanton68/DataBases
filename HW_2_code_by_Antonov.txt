@@ -1,0 +1,41 @@
+USE `lesson_1`;
+SELECT * FROM lesson_1.countries;
+SHOW INDEX FROM `countries`;
+ALTER TABLE `countries` CHANGE COLUMN `countries_name` `title` VARCHAR(150) NOT NULL;
+ALTER TABLE `countries` ADD INDEX `state`(`title`);
+ALTER TABLE `countries` DROP INDEX `countries_name_UNIQUE`;
+SELECT * FROM lesson_1.regions;
+SHOW INDEX FROM `regions`;
+ALTER TABLE `regions` CHANGE COLUMN `id_regions` `id` INT NOT NULL AUTO_INCREMENT;
+ALTER TABLE `regions` CHANGE COLUMN `regions_name` `title` VARCHAR(150) NOT NULL;
+ALTER TABLE `regions` ADD COLUMN `country_id` INT NOT NULL AFTER `id`;
+ALTER TABLE `regions` 
+ADD CONSTRAINT FOREIGN KEY (`country_id`) 
+REFERENCES `countries` (`id`)
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+ALTER TABLE `regions` DROP INDEX `id_regions_UNIQUE`;
+ALTER TABLE `regions` DROP INDEX `regions_name_UNIQUE`;
+ALTER TABLE `regions` ADD INDEX `region`(`title`);
+SELECT * FROM lesson_1.cities;
+SHOW INDEX FROM `cities`;
+ALTER TABLE `cities` CHANGE COLUMN `country_id` `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY;
+ALTER TABLE `cities` CHANGE COLUMN `cities_name` `title` VARCHAR(150) NOT NULL;
+ALTER TABLE `cities` DROP INDEX `id_cities_UNIQUE`;
+ALTER TABLE `cities` DROP INDEX `cities_name_UNIQUE`;
+ALTER TABLE `cities` ADD COLUMN `country_id` INT NOT NULL AFTER `id`;
+ALTER TABLE `cities` 
+ADD CONSTRAINT FOREIGN KEY (`country_id`) 
+REFERENCES `countries` (`id`)
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+ALTER TABLE `cities` ADD COLUMN `region_id` INT NOT NULL AFTER `country_id`;
+ALTER TABLE `cities` 
+ADD CONSTRAINT FOREIGN KEY (`region_id`) 
+REFERENCES `regions` (`id`)
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+ALTER TABLE `cities` ADD COLUMN `important` TINYINT(1) NOT NULL AFTER `country_id`;
+ALTER TABLE `cities` ADD INDEX `cities`(`important`);
+ALTER TABLE `cities` DROP INDEX `cities`;
+ALTER TABLE `cities` ADD INDEX `cities`(`title`);

@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `lesson_1` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+USE `lesson_1`;
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
 -- Host: localhost    Database: lesson_1
@@ -23,12 +25,14 @@ DROP TABLE IF EXISTS `regions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `regions` (
-  `id_regions` int(11) NOT NULL AUTO_INCREMENT,
-  `regions_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`id_regions`),
-  UNIQUE KEY `id_regions_UNIQUE` (`id_regions`),
-  UNIQUE KEY `regions_name_UNIQUE` (`regions_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_id` int(11) NOT NULL,
+  `title` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `region` (`title`),
+  KEY `country_id` (`country_id`),
+  CONSTRAINT `regions_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +41,7 @@ CREATE TABLE `regions` (
 
 LOCK TABLES `regions` WRITE;
 /*!40000 ALTER TABLE `regions` DISABLE KEYS */;
-INSERT INTO `regions` VALUES (3,'Central Belarusian Region'),(1,'Central Russian Region'),(4,'East Belarusian Region'),(2,'North-West Russian Region ');
+INSERT INTO `regions` VALUES (1,1,'Central Russian'),(2,1,'North-West Russian'),(3,2,'Central Belarus'),(4,2,'East Belarus');
 /*!40000 ALTER TABLE `regions` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-22 17:28:02
+-- Dump completed on 2019-01-24 16:20:49
