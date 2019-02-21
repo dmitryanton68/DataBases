@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
--- Host: localhost    Database: lesson_1
+-- Host: localhost    Database: lesson_3
 -- ------------------------------------------------------
 -- Server version	8.0.14
 
@@ -16,28 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `countries`
+-- Table structure for table `depart`
 --
 
-DROP TABLE IF EXISTS `countries`;
+DROP TABLE IF EXISTS `depart`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `countries` (
+CREATE TABLE `depart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `state` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `count` int(11) DEFAULT '0',
+  `head_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `countries`
+-- Dumping data for table `depart`
 --
 
-LOCK TABLES `countries` WRITE;
-/*!40000 ALTER TABLE `countries` DISABLE KEYS */;
-INSERT INTO `countries` VALUES (2,'Belarus'),(1,'Russia');
-/*!40000 ALTER TABLE `countries` ENABLE KEYS */;
+LOCK TABLES `depart` WRITE;
+/*!40000 ALTER TABLE `depart` DISABLE KEYS */;
+INSERT INTO `depart` VALUES (1,'IT отдел',0,NULL),(2,'Бухгалтерия',0,NULL),(3,'Контроль качества',0,NULL);
+/*!40000 ALTER TABLE `depart` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

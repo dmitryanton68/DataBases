@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
--- Host: localhost    Database: lesson_1
+-- Host: localhost    Database: lesson_3
 -- ------------------------------------------------------
 -- Server version	8.0.14
 
@@ -16,28 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `countries`
+-- Table structure for table `shtat`
 --
 
-DROP TABLE IF EXISTS `countries`;
+DROP TABLE IF EXISTS `shtat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `countries` (
+CREATE TABLE `shtat` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `state` (`title`)
+  `name` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastname` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `otdel` int(11) DEFAULT NULL,
+  `zp` int(11) DEFAULT NULL,
+  `position` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `countries`
+-- Dumping data for table `shtat`
 --
 
-LOCK TABLES `countries` WRITE;
-/*!40000 ALTER TABLE `countries` DISABLE KEYS */;
-INSERT INTO `countries` VALUES (2,'Belarus'),(1,'Russia');
-/*!40000 ALTER TABLE `countries` ENABLE KEYS */;
+LOCK TABLES `shtat` WRITE;
+/*!40000 ALTER TABLE `shtat` DISABLE KEYS */;
+INSERT INTO `shtat` VALUES (1,'Тарас','Голомозый',1,25000,'Программист'),(2,'Андрей','Юрченко',1,40000,'Программист'),(4,'Антон','Полонников',2,45000,'Тестировщик');
+/*!40000 ALTER TABLE `shtat` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
