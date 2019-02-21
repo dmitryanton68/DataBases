@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `lesson_1` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
-USE `lesson_1`;
 -- MySQL dump 10.13  Distrib 8.0.14, for Win64 (x86_64)
 --
 -- Host: localhost    Database: lesson_1
@@ -36,7 +34,7 @@ CREATE TABLE `cities` (
   KEY `cities` (`title`),
   CONSTRAINT `cities_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `cities_ibfk_2` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +43,7 @@ CREATE TABLE `cities` (
 
 LOCK TABLES `cities` WRITE;
 /*!40000 ALTER TABLE `cities` DISABLE KEYS */;
-INSERT INTO `cities` VALUES (1,1,1,1,'Moscow'),(2,1,0,2,'Saint-Petersburg'),(3,2,1,3,'Minsk'),(4,2,0,4,'Vitebsk');
+INSERT INTO `cities` VALUES (1,1,1,1,'Moscow'),(2,1,0,2,'Saint-Petersburg'),(3,2,1,3,'Minsk'),(4,2,0,4,'Vitebsk'),(5,1,0,2,'Pskov'),(6,1,0,2,'Great Novgorod');
 /*!40000 ALTER TABLE `cities` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-24 16:20:49
+-- Dump completed on 2019-01-29 14:17:06

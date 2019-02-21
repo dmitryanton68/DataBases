@@ -1,0 +1,54 @@
+# База данных «Страны и города мира»:
+# 1. Сделать запрос, в котором мы выберем все данные о городе – регион, страна.
+# 2. Выбрать все города из Московской области.
+# +++++++++++++++++++++++++++++
+# Добавил в таблицу от Урока 1 два города, выбрал города одного региона.
+
+USE `lesson_1`;
+SELECT * FROM `cities`;
+INSERT INTO `lesson_1`.`cities` (`country_id`, `important`, `region_id`, `title`) 
+VALUES ('1', '0', '2', 'Pskov');
+INSERT INTO `lesson_1`.`cities` (`country_id`, `important`, `region_id`, `title`) 
+VALUES ('1', '0', '2', 'Great Novgorod');
+
+SELECT `cities`.`title`, `countries`.`title`, `regions`.`title` 
+FROM `cities` 
+INNER JOIN `countries`
+ON `countries`.`id` = `cities`.`country_id`
+INNER JOIN `regions`
+ON `regions`.`id` = `cities`.`region_id`;
+
+SELECT `cities`.`title`, `countries`.`title`, `regions`.`title` 
+FROM `cities` 
+INNER JOIN `countries`
+ON `countries`.`id` = `cities`.`country_id`
+INNER JOIN `regions`
+ON `regions`.`id` = `cities`.`region_id`
+WHERE `cities`.`region_id` = 2;
+
+# +++++++++++++++++++++++++++++++++++++++++++++
+# База данных «Сотрудники»:
+# 1. Выбрать среднюю зарплату по отделам.
+# 2. Выбрать максимальную зарплату у сотрудника.
+# 3. Удалить одного сотрудника, у которого максимальная зарплата.
+# 4. Посчитать количество сотрудников во всех отделах.
+# 5. Найти количество сотрудников в отделах и посмотреть, 
+# сколько всего денег получает отдел.
+# +++++++++++++++++++++++++++++++++++++++++++++++
+# Сделал в БД от Урока 3.
+
+USE `lesson_3`;
+
+SELECT AVG(`zp`) FROM `shtat` GROUP BY `otdel`;
+
+SELECT concat(`name`, `lastname`) AS 'ФИО', `zp` 
+FROM `shtat` WHERE `zp` = (SELECT MAX(`zp`) FROM `shtat`);
+
+DELETE FROM `shtat` 
+WHERE `zp` = (SELECT * FROM (SELECT MAX(`zp`) FROM `shtat`) AS tmptable);
+
+SELECT COUNT(`name`) AS 'Количество сотрудников всего' FROM `shtat`;
+
+SELECT COUNT(`name`) AS 'Количество сотрудников', 
+SUM(`zp`) AS 'ФОТ отдела' 
+FROM `shtat` GROUP BY `otdel`;
