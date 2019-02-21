@@ -1,0 +1,75 @@
+# 1. Реализовать практические задания на примере других таблиц и запросов.
+# 2. Подумать, какие операции являются транзакционными, 
+# и написать несколько примеров с транзакционными запросами.
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# на базе д/з №3
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+USE `lesson_3`;
+SET autocommit = 0;
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN;
+SELECT @a := (SELECT AVG(`zp`) FROM `shtat` GROUP BY `otdel` LIMIT 1);
+SELECT concat(`name`, `lastname`) AS 'ФИО', `zp` FROM `shtat` WHERE `zp` < @a;
+COMMIT;
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+USE `lesson_3`;
+SET autocommit = 0;
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN;
+SELECT @s := (SELECT `lastname` FROM `shtat` 
+WHERE `zp` = (SELECT MAX(`zp`) FROM `shtat`)); 
+SELECT @n := (SELECT `name` FROM `shtat` 
+WHERE `zp` = (SELECT MAX(`zp`) FROM `shtat`)); 
+SELECT concat(`depart`.`name`, ' - ', `shtat`.`position`) 
+FROM `shtat`
+INNER JOIN `depart`
+ON `shtat`.`otdel` = `depart`.`id`
+WHERE `shtat`.`name` = @n AND `shtat`.`lastname` = @s LIMIT 1;
+COMMIT;
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# 3. Проанализировать несколько запросов с помощью EXPLAIN.
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+USE `lesson_3`;
+# +++++++++++++++++++++++++++++++
+SELECT COUNT(`name`) AS 'Количество сотрудников всего' FROM `shtat`;
+EXPLAIN SELECT COUNT(`name`) AS 'Количество сотрудников всего' FROM `shtat`;
+# ===============
+# id, select_type, table, partitions, type, possible_keys, key, key_len, ref, rows, filtered, Extra
+# 1, SIMPLE, shtat, , ALL, , , , , 7, 100.00, 
+# ------------------
+# Анализ запроса с помощью оператора EXPLAIN показал эффективность (значение filtered) = 100, несмотря на то, 
+# что в type указано ALL, т.е. самый неэффективный уровень выполнения запроса (просматриваются все элементы таблицы).  
+
+# ++++++++++++++++++++++++++++++++
+SELECT COUNT(`name`) AS 'Количество сотрудников', SUM(`zp`) AS 'ФОТ отдела' FROM `shtat` GROUP BY `otdel`;
+EXPLAIN SELECT COUNT(`name`) AS 'Количество сотрудников', SUM(`zp`) AS 'ФОТ отдела' FROM `shtat` GROUP BY `otdel`;
+#=================
+# id, select_type, table, partitions, type, possible_keys, key, key_len, ref, rows, filtered, Extra
+# 1, SIMPLE, shtat, , ALL, , , , , 7, 100.00, Using temporary
+# ------------------
+# Анализ запроса с помощью оператора EXPLAIN показал эффективность (значение filtered) = 100, несмотря на то, 
+# что в type указано ALL, т.е. самый неэффективный уровень выполнения запроса (просматриваются все элементы таблицы).  
+
+# ++++++++++++++++++++++++++++++++
+SELECT concat(`name`, `lastname`) AS 'ФИО', `zp` FROM `shtat` WHERE `zp` = (SELECT MAX(`zp`) FROM `shtat`);
+EXPLAIN SELECT concat(`name`, `lastname`) AS 'ФИО', `zp` FROM `shtat` WHERE `zp` = (SELECT MAX(`zp`) FROM `shtat`);
+CREATE INDEX `zp` ON `shtat`(`zp`);
+#===================
+# id, select_type, table, partitions, type, possible_keys, key, key_len, ref, rows, filtered, Extra
+# 1, PRIMARY, shtat, , ALL, , , , , 7, 14.29, Using where
+# 2, SUBQUERY, shtat, , ALL, , , , , 7, 100.00, 
+# ------------------
+# Анализ PRIMARY запроса с помощью оператора EXPLAIN показал эффективность (значение filtered) = 14,29, 
+# что объясняется вынужденным перебором 7 rows,
+# но уровень выполнения запроса можно повысить созданием индекса по `zp`. 
+#====================
+# id, select_type, table, partitions, type, possible_keys, key, key_len, ref, rows, filtered, Extra
+# 1, PRIMARY, shtat, , ref, zp, zp, 5, const, 1, 100.00, Using where
+# 2, SUBQUERY, , , , , , , , , , Select tables optimized away
+# ------------------
+# Анализ PRIMARY запроса с помощью оператора EXPLAIN после создания индекса `zp` показал эффективность (значение filtered) = 100,
+# т.е. максимальную эффективность, что было получено в результате использования в качестве key индекса `zp` длиной 5, 
+# т.к. в итоге рассматривался только 1 row. 
+ 
+
+
