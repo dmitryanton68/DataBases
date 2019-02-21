@@ -1,0 +1,62 @@
+# 1. Создать VIEW на основе запросов, которые вы сделали в ДЗ к уроку 3.
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# на основе запросов по БД lesson_1 сделал 2 VIEW
+USE `lesson_1`;
+SELECT * FROM `cities`;
+
+CREATE VIEW `city` AS
+SELECT `cities`.`title` AS 'city', `countries`.`title` AS 'country', `regions`.`title` AS 'region' 
+FROM `cities` 
+INNER JOIN `countries`
+ON `countries`.`id` = `cities`.`country_id`
+INNER JOIN `regions`
+ON `regions`.`id` = `cities`.`region_id`;
+SELECT * FROM `city`;
+
+CREATE VIEW `north_west_cities` AS
+SELECT  `cities`.`title` AS 'city', `countries`.`title` AS 'country', `regions`.`title` AS 'region'  
+FROM `cities` 
+INNER JOIN `countries`
+ON `countries`.`id` = `cities`.`country_id`
+INNER JOIN `regions`
+ON `regions`.`id` = `cities`.`region_id`
+WHERE `cities`.`region_id` = 2;
+SELECT * FROM `north_west_cities`;
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# 2. Создать функцию, которая найдет менеджера по имени и фамилии.
+USE `lesson_3`;
+CREATE FUNCTION `manager` (user_name VARCHAR(30), user_lastname VARCHAR(30))
+RETURNS VARCHAR(40) DETERMINISTIC
+READS SQL DATA
+RETURN(
+SELECT concat(`depart`.`name`, ' - ', `shtat`.`position`) 
+FROM `shtat`
+INNER JOIN `depart`
+ON `shtat`.`otdel` = `depart`.`id`
+WHERE `shtat`.`name` = user_name AND `shtat`.`lastname` = user_lastname LIMIT 1);
+SELECT `manager`('Нюша', 'Куперман');
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# 3. Создать триггер, который при добавлении нового сотрудника будет 
+# выплачивать ему вступительный бонус, занося запись об этом в таблицу salary.
+USE `lesson_3`;
+CREATE TABLE IF NOT EXISTS `salary`(
+`id` INT NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(25) NOT NULL,
+`lastname` VARCHAR(30) NOT NULL,
+`otdel` INT,
+`position` VARCHAR(40),
+`bonus` INT,
+`zp` INT,
+PRIMARY KEY(`id`)
+) CHAR SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+INSERT INTO `salary`(`name`, `lastname`, `otdel`, `position`)
+SELECT `name`, `lastname`, `otdel`, `position`
+FROM `shtat`;
+CREATE TRIGGER `bonus` 
+AFTER INSERT ON `shtat`
+FOR EACH ROW
+INSERT INTO `salary` (`name`, `lastname`, `otdel`, `position`, `bonus`)
+VALUES (NEW.name, NEW.lastname, NEW.otdel, NEW.position, NEW.zp*0.5);
+INSERT INTO `shtat`(`name`, `lastname`, `otdel`, `zp`, `position`)
+VALUES ('Александр', 'Иванов', 2, 80000, 'Главный бухгалтер');
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
