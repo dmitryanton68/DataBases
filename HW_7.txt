@@ -1,0 +1,172 @@
+1.	Создать нового пользователя и задать ему права доступа на базу данных «Страны и города мира».
+--------------------------------------------------------------------------------------------------------
+mysql> CREATE USER IF NOT EXISTS 'hw_task'@'localhost' IDENTIFIED WITH mysql_native_password BY '123123';
+Query OK, 0 rows affected (0,02 sec)
+
+mysql> show schemas;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| lesson_1           |
+| lesson_2           |
+| lesson_3           |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| sys                |
+| world              |
++--------------------+
+9 rows in set (0,00 sec)
+
+mysql> GRANT ALL PRIVILEGES ON `world`.* TO 'hw_task'@'localhost';
+Query OK, 0 rows affected (0,06 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0,01 sec)
+
+root@MySQL8:~# mysql -u hw_task -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 8.0.13 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show schemas;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| world              |
++--------------------+
+2 rows in set (0,00 sec)
+
+mysql> use world;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_world |
++-----------------+
+| city            |
+| country         |
+| countrylanguage |
++-----------------+
+3 rows in set (0,00 sec)
+
+mysql> select * from `countrylanguage` where `Language` = 'Russian';
++-------------+----------+------------+------------+
+| CountryCode | Language | IsOfficial | Percentage |
++-------------+----------+------------+------------+
+| AZE         | Russian  | F          |        3.0 |
+| BLR         | Russian  | T          |       32.0 |
+| EST         | Russian  | F          |       27.8 |
+| FIN         | Russian  | F          |        0.4 |
+| GEO         | Russian  | F          |        8.8 |
+| ISR         | Russian  | F          |        8.9 |
+| KAZ         | Russian  | F          |       34.7 |
+| KGZ         | Russian  | T          |       16.2 |
+| LTU         | Russian  | F          |        8.1 |
+| LVA         | Russian  | F          |       32.5 |
+| MDA         | Russian  | F          |       23.2 |
+| RUS         | Russian  | T          |       86.6 |
+| SJM         | Russian  | F          |        0.0 |
+| TJK         | Russian  | F          |        9.7 |
+| TKM         | Russian  | F          |        6.7 |
+| UKR         | Russian  | F          |       32.9 |
+| UZB         | Russian  | F          |       10.9 |
++-------------+----------+------------+------------+
+17 rows in set (0,00 sec)
+
+=======================================================================================
+2.	Сделать резервную копию базы, удалить базу и пересоздать из бекапа.
+---------------------------------------------------------------------------------------
+
+root@MySQL8:~# mysqldump -u root -p123123 world > /var/mysql_backups/_back_`date '+%Y.%m.%d'`.sql
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+
+mysql> DROP DATABASE world;
+Query OK, 3 rows affected (0,13 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
++--------------------+
+1 row in set (0,00 sec)
+
+mysql> create database world;
+Query OK, 1 row affected (0,07 sec)
+
+mysql> \q
+Bye
+root@MySQL8:~# mysql -u root -p123123 world < /var/mysql_backups/_back_2019.02.22.sql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+
+root@MySQL8:~# mysql -u hw_task -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 27
+Server version: 8.0.13 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| world              |
++--------------------+
+2 rows in set (0,00 sec)
+
+mysql> use world;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select * from `countrylanguage` where `Language` = 'Russian';
++-------------+----------+------------+------------+
+| CountryCode | Language | IsOfficial | Percentage |
++-------------+----------+------------+------------+
+| AZE         | Russian  | F          |        3.0 |
+| BLR         | Russian  | T          |       32.0 |
+| EST         | Russian  | F          |       27.8 |
+| FIN         | Russian  | F          |        0.4 |
+| GEO         | Russian  | F          |        8.8 |
+| ISR         | Russian  | F          |        8.9 |
+| KAZ         | Russian  | F          |       34.7 |
+| KGZ         | Russian  | T          |       16.2 |
+| LTU         | Russian  | F          |        8.1 |
+| LVA         | Russian  | F          |       32.5 |
+| MDA         | Russian  | F          |       23.2 |
+| RUS         | Russian  | T          |       86.6 |
+| SJM         | Russian  | F          |        0.0 |
+| TJK         | Russian  | F          |        9.7 |
+| TKM         | Russian  | F          |        6.7 |
+| UKR         | Russian  | F          |       32.9 |
+| UZB         | Russian  | F          |       10.9 |
++-------------+----------+------------+------------+
+17 rows in set (0,01 sec)
+
+mysql>
+
+
+
+
