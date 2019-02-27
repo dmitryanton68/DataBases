@@ -1,0 +1,56 @@
+create table users(
+	id_user serial primary key,
+	user_name varchar(20) not null
+);
+create table resumes(
+	user_id serial primary key,
+	input_like text[],
+	output_like text[],
+	photo int default null, -- really here type == inet
+	photo_comment text,
+	FOREIGN KEY (user_id) REFERENCES users(id_user)
+);
+-- SELECT * FROM pg_catalog.pg_tables;
+insert into users values 
+	(1, 'A'), 
+	(2, 'B'), 
+	(3, 'C'), 
+	(4, 'D'), 
+	(5, 'E');
+select * from users;
+insert into resumes values 
+	(1, '{"B", "C", "E"}', '{"D", "E", NULL}'), 
+	(2, '{"B", "D", "E"}', '{"A", "B", "C"}'), 
+	(3, '{"B", "E", NULL}', '{"D", "E", "A"}'), 
+	(4, '{"A", "C", NULL}', '{"B", "E", NULL}' ), 
+	(5, '{"A", "B", "C"}', '{"A", "B", "C"}');
+select * from resumes;
+
+-- Вставить цикл в заполнение столбца cross_like не смог.
+-- Максимум - смог определить были ли кросс-лайки, 
+-- но как вывести с кем именно - не знаю:
+
+select id_user, user_name, input_like, output_like,
+(input_like && output_like) as cross_like
+from users inner join resumes 
+on (users.id_user = resumes.user_id);
+
+-- ==================================================================	
+-- Можно посмотреть как один элемент в массиве
+select array(select input_like from resumes where user_id = 1);	
+
+-- Можно посмотреть просто список
+select input_like from resumes where user_id = 1;
+
+-- Можно задать цикл
+SELECT input_like FROM resumes
+WHERE user_id <= (select count(*) from resumes)
+ORDER BY user_id DESC
+LIMIT 1;
+-- ======================================================================
+-- Не работающие заготовки:
+
+-- select * from unnest(input_like) a where a = any(output_like);
+
+-- select array_agg(a) from unnest(select array(select input_like from resumes)) a 
+-- where a = any(select array(select output_like from resumes));
